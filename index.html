@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
+		
+		<title>Weather App</title>
+
+		<!-- Loading third party fonts -->
+		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
+		<link href="{{ url_for('static',filename='fonts/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+
+		<!-- Loading main css file -->
+		<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo_TJC_icon.ico') }}">
+
+
+		<!--[if lt IE 9]>
+		<script src="js/ie-support/html5.js"></script>
+		<script src="js/ie-support/respond.js"></script>
+		<![endif]-->
+
+	</head>
+
+
+	<body>
+
+		<div class="site-content">
+			<div class="site-header">
+				<div class="container">
+					<a href="/" class="branding">
+						<img src="{{ url_for('static',filename='images/logo.png') }}" alt="" class="logo">
+						<div class="logo-type">
+							<h1 class="site-title">Weather App </h1>
+                            <small class="site-description">Python-Flask Api Test App</small>
+                            <br/>
+
+						</div>
+					</a>
+
+					<!-- Default snippet for navigation -->
+					<div class="main-navigation">
+						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+						<ul class="menu">
+							<!--<li class="menu-item current-menu-item"><a href="index.html">Home</a></li>-->
+                            <li class="menu-item current-menu-item"><a target="_blank" href="https://developer.yahoo.com/weather/#python">Yahoo Weather Api</a></li>
+                            <li class="menu-item current-menu-item"><a href="/">Back to Main</a></li>
+
+						</ul> <!-- .menu -->
+					</div> <!-- .main-navigation -->
+
+					<div class="mobile-navigation"></div>
+
+				</div>
+			</div> <!-- .site-header -->
+
+			<div id="hero" class="hero" >
+
+
+                <div class="forecast-table">
+				<div class="container">
+					<div class="forecast-container">
+						<div class="today forecast">
+							<div class="forecast-header mobHeader">
+								<div class="day">{{ today }}</div>
+								<div class="date">{{ todate }}</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="location">{{ city }}</div>
+								<div class="location">{{ ccity }},{{ reg }},{{ cnty }}.</div>
+								<div class="degree">
+									<div class="num">{{ temp }}<sup>o</sup>C</div>
+									<div class="forecast-icon">
+                                         {% if code>=0 and code<=4 %}
+										<img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=90>
+                                        {% elif code>=5 and code<=9 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=90>
+                                        {% elif code>=10 and code<=18 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-13.svg') }}"alt="" width=90>
+                                        {% elif code>=19 and code<=26 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-8.svg') }}"alt="" width=90>
+                                        {% elif code==27 or code==29 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-6.svg') }}"alt="" width=90>
+                                        {% elif code==28 or code==30 or code==44 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-3.svg') }}"alt="" width=90>
+                                        {% elif code==31 or code==33 or code ==34 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-7.svg') }}"alt="" width=90>
+                                        {% elif code==32 or code==36 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-2.svg') }}"alt="" width=90>
+                                        {% elif code==35 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-4.svg') }}"alt="" width=90>
+                                        {% elif code>=37 and code<=40 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-12.svg') }}"alt="" width=90>
+                                        {% elif code>=41 and code<=43 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=90>
+                                        {% elif code>=45 and code<=47 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=90>
+                                        {% endif %}
+
+
+									</div>
+								</div>
+								<span><img src="{{ url_for('static',filename='images/icon-umberella.png') }}" alt="">{{ humidity }}%</span>
+								<span><img src="{{ url_for('static',filename='images/icon-wind.png') }}" alt="">{{ speed }}km/h</span>
+								<span><img src="{{ url_for('static',filename='images/icon-compass.png') }}" alt="">{{ winddirection }}</span>
+                                <span><img src="{{ url_for('static',filename='images/icon-marker.png') }}" alt="">{{ lat  }}(Lat)</span>
+                                <span><img src="{{ url_for('static',filename='images/icon-marker.png') }}" alt="">{{ long  }}(Long)</span>
+                                <span><img src="{{ url_for('static',filename='images/sunrise_reduced.png') }}" alt="">{{ sr }}</span>
+                                <span><img src="{{ url_for('static',filename='images/sunset_reduced.png') }}" alt="">{{ ss }}</span>
+                                <span>Conditions: {{ cond }}</span>
+							</div>
+						</div>
+						<div class="forecast">
+
+							<div class="forecast-header">
+
+
+								<div class="day">{{ for0.get('day') }}</div>
+                                <div class="date">{{ for0.get('date') }}</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="forecast-icon">
+									{% if for0.get('code')|int>=0 and for0.get('code')|int<=4 %}
+										<img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=5 and for0.get('code')|int<=9 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=10 and for0.get('code')|int<=18 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-13.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=19 and for0.get('code')|int<=26 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-8.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int==27 or for0.get('code')|int==29 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-6.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int==28 or for0.get('code')|int==30 or for0.get('code')|int==44 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-3.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int==31 or for0.get('code')|int==33 or for0.get('code')|int ==34 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-7.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int==32 or for0.get('code')|int==36 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-2.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int==35 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-4.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=37 and for0.get('code')|int<=40 %}
+                                       <img src="{{ url_for('static',filename='images/icons/icon-12.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=41 and for0.get('code')|int<=43 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for0.get('code')|int>=45 and for0.get('code')|int<=47 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% endif %}
+								</div>
+								<div class="degree">{{ for0.get('high') }}<sup>o</sup>C</div>
+								<small>{{ for0.get('low') }}<sup>o</sup></small>
+                                </br>
+                                <small>{{ for0.get('text') }}</small>
+							</div>
+						</div>
+						<div class="forecast">
+							<div class="forecast-header">
+								<div class="day">{{ for1.get('day') }}</div>
+                                <div class="date">{{ for1.get('date') }}</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="forecast-icon">
+									{% if for1.get('code')|int>=0 and for1.get('code')|int<=4 %}
+										<img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=5 and for1.get('code')|int<=9 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=10 and for1.get('code')|int<=18 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-13.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=19 and for1.get('code')|int<=26 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-8.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int==27 or for1.get('code')|int==29 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-6.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int==28 or for1.get('code')|int==30 or for1.get('code')|int==44 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-3.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int==31 or for1.get('code')|int==33 or for1.get('code')|int ==34 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-7.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int==32 or for1.get('code')|int==36 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-2.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int==35 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-4.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=37 and for1.get('code')|int<=40 %}
+                                       <img src="{{ url_for('static',filename='images/icons/icon-12.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=41 and for1.get('code')|int<=43 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for1.get('code')|int>=45 and for1.get('code')|int<=47 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% endif %}
+								</div>
+								<div class="degree">{{ for1.get('high') }}<sup>o</sup>C</div>
+								<small>{{ for1.get('low') }}<sup>o</sup></small>
+                                </br>
+                                <small>{{ for1.get('text') }}</small>
+							</div>
+						</div>
+						<div class="forecast">
+							<div class="forecast-header">
+								<div class="day">{{ for2.get('day') }}</div>
+                                <div class="date">{{ for2.get('date') }}</div>
+							</div> <!-- .forecast-header -->
+							<br class="forecast-content">
+								<div class="forecast-icon">
+									{% if for2.get('code')|int>=0 and for2.get('code')|int<=4 %}
+										<img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=5 and for2.get('code')|int<=9 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=10 and for2.get('code')|int<=18 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-13.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=19 and for2.get('code')|int<=26 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-8.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int==27 or for2.get('code')|int==29 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-6.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int==28 or for2.get('code')|int==30 or for2.get('code')|int==44 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-3.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int==31 or for2.get('code')|int==33 or for2.get('code')|int ==34 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-7.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int==32 or for2.get('code')|int==36 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-2.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int==35 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-4.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=37 and for2.get('code')|int<=40 %}
+                                       <img src="{{ url_for('static',filename='images/icons/icon-12.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=41 and for2.get('code')|int<=43 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-14.svg') }}"alt="" width=48>
+                                        {% elif for2.get('code')|int>=45 and for2.get('code')|int<=47 %}
+                                        <img src="{{ url_for('static',filename='images/icons/icon-11.svg') }}"alt="" width=48>
+                                        {% endif %}
+								</div>
+								<div class="degree">{{ for2.get('high') }}<sup>o</sup>C</div>
+								<small>{{ for2.get('low') }}<sup>o</sup></small>
+                                </br>
+                                <small>{{ for2.get('text') }}</small>
+							</div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+			</div>
+			</div>
+			<footer class="site-footer">
+				<div class="container">
+
+
+					<p class="colophon"><a href="https://www.themezy.com/free-website-templates/128-steel-weather-free-responsive-website-template" target="_blank">Theme Downloaded From: Themezy</a></p>
+                    <p><a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/white.png" width="134" height="29"/> </a>
+</p>
+				</div>
+			</footer> <!-- .site-footer -->
+		</div>
+
+		<script src="jquery-1.11.1.min.js"></script>
+
+		
+	</body>
+
+</html>
